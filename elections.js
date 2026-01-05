@@ -1,5 +1,5 @@
 // MIT License
-// Copyright (c) 2025 Open2b
+// Copyright (c) 2026 Open2b
 // See the LICENSE file for full text.
 
 import { getTime } from './utils.js'

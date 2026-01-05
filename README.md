@@ -53,4 +53,4 @@ For full usage, advanced configuration, and API reference, visit the
 ## 📄 License
 
 [MIT License](LICENSE)
-© 2025 [Open2b](https://www.open2b.com/)
+© 2026 [Open2b](https://www.open2b.com/)
