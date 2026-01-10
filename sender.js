@@ -173,7 +173,7 @@ class Sender {
 			let delay
 			const base = 100
 			const cap = 5 * 1000
-			if (status === 429 || status === 501 || status === 503) {
+			if (response.retryAfter != null && (status === 429 || status === 501 || status === 503)) {
 				// Set the delay to match the value returned by the server in the 'Retry-After' header.
 				let retryAfter = parseInt(response.retryAfter)
 				if (isNaN(retryAfter)) {
@@ -185,7 +185,9 @@ class Sender {
 					}
 				}
 				if (!isNaN(retryAfter)) {
-					delay = Math.min(Math.floor(retryAfter * 1000 + (status === 503 ? Math.random() * base : 0)), cap)
+					delay = retryAfter > 0
+						? Math.min(Math.floor(retryAfter * 1000 + (status === 503 ? Math.random() * base : 0)), cap)
+						: 0
 				}
 			}
 			if (delay == null) {
