@@ -1,6 +1,6 @@
 {
 	"name": "@meergo/javascript-sdk",
-	"version": "0.10.1",
+	"version": "0.10.2",
 	"description": "JavaScript SDK for sending events to the Meergo Customer Data Platform (CDP)",
 	"main": "index.cjs",
 	"module": "index.js",
