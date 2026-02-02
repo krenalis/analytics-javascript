@@ -1,6 +1,6 @@
 {
 	"name": "@meergo/javascript-sdk",
-	"version": "0.10.2",
+	"version": "0.10.3",
 	"description": "JavaScript SDK for sending events to the Meergo Customer Data Platform (CDP)",
 	"main": "index.cjs",
 	"module": "index.js",
@@ -33,8 +33,8 @@
 	],
 	"type": "module",
 	"devDependencies": {
-		"@swc/cli": "^0.7.9",
-		"@swc/core": "^1.15.8",
+		"@swc/cli": "^0.7.10",
+		"@swc/core": "^1.15.11",
 		"esbuild": "^0.27.2"
 	},
 	"license": "MIT",
