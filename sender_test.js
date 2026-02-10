@@ -11,7 +11,7 @@ import { Queue } from './queue.js'
 const DEBUG = false
 
 const writeKey = 'rq6JJg5ENWK28NHfxSwJZmzeIvDC8GQO'
-const endpoint = 'https://example.com/api/v1/'
+const endpoint = 'https://example.com/v1/'
 
 Deno.test('Sender send', async (t) => {
 	// Prepare the execution environment.

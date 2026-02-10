@@ -13,7 +13,7 @@ import Meergo from './meergo.js'
 const DEBUG = false
 
 const writeKey = 'rq6JJg5ENWK28NHfxSwJZmzeIvDC8GQO'
-const endpoint = 'https://example.com/api/v1/events/'
+const endpoint = 'https://example.com/v1/events/'
 
 Deno.test('Meergo', async (t) => {
 	// Prepare the execution environment.
