@@ -252,6 +252,34 @@ class Meergo {
 		return id
 	}
 
+	// normalizeOptions copies options and removes undefined values and invalid
+	// field types.
+	#normalizeOptions(options) {
+		const opts = {}
+		if (!isPlainObject(options) || Object.keys(options).length === 0) {
+			return opts
+		}
+		for (const k of Object.keys(options)) {
+			const v = options[k]
+			if (v !== void 0) {
+				opts[k] = v
+			}
+		}
+		if ('timestamp' in opts && !(opts.timestamp instanceof Date) && typeof opts.timestamp !== 'string') {
+			delete opts.timestamp
+		}
+		if ('messageId' in opts && typeof opts.messageId !== 'string') {
+			delete opts.messageId
+		}
+		if ('integrations' in opts && !isPlainObject(opts.integrations)) {
+			delete opts.integrations
+		}
+		if ('context' in opts && !isPlainObject(opts.context)) {
+			delete opts.context
+		}
+		return opts
+	}
+
 	// onElection is called when an election occurs. isLeader reports whether it
 	// is the leader.
 	#onElection(isLeader) {
@@ -345,7 +373,7 @@ class Meergo {
 			}
 			try {
 				const options = setArgs.call(this, event, args)
-				this.#sendEvent(event, options)
+				this.#sendEvent(event, this.#normalizeOptions(options))
 			} catch (error) {
 				reject(error)
 				return
@@ -363,7 +391,7 @@ class Meergo {
 
 	// sendEvent sends an event with the given options.
 	#sendEvent(event, options) {
-		if (options && 'timestamp' in options) {
+		if ('timestamp' in options) {
 			event.timestamp = options.timestamp
 		} else {
 			event.timestamp = new Date()
@@ -454,7 +482,7 @@ class Meergo {
 			}
 		}
 
-		event.messageId = uuid()
+		event.messageId = options.messageId || uuid()
 		event.anonymousId = this.#user.anonymousId()
 
 		const n = navigator
@@ -495,15 +523,9 @@ class Meergo {
 		}
 
 		event.integrations = {}
-		if (options && typeof options.integrations == 'object') {
+		if (typeof options.integrations == 'object') {
 			for (const n in options.integrations) {
 				event.integrations[n] = options.integrations[n]
-			}
-		}
-
-		for (const option in options) {
-			if (option !== 'integrations' && options[option] !== void 0) {
-				event.context[option] = options[option]
 			}
 		}
 
@@ -513,6 +535,12 @@ class Meergo {
 			if (sessionStart) {
 				event.context.sessionStart = true
 			}
+		}
+
+		// Apply user-provided context last so it can override automatic
+		// enrichments (campaign, timezone, session, etc).
+		if ('context' in options) {
+			this.#mergeContext(event.context, options.context)
 		}
 
 		try {
@@ -526,6 +554,35 @@ class Meergo {
 				throw error
 			}
 		}
+	}
+
+	// mergeContext deeply merges the source context object into target.
+	#mergeContext(target, source, visited) {
+		if (visited == null) {
+			visited = []
+		}
+		if (visited.indexOf(source) !== -1) {
+			return
+		}
+		visited.push(source)
+		for (const k of Object.keys(source)) {
+			if (k === '__proto__' || k === 'prototype' || k === 'constructor') {
+				continue
+			}
+			const v = source[k]
+			if (isPlainObject(v)) {
+				if (visited.indexOf(v) !== -1) {
+					continue
+				}
+				if (!isPlainObject(target[k])) {
+					target[k] = {}
+				}
+				this.#mergeContext(target[k], v, visited)
+			} else if (v !== void 0) {
+				target[k] = v
+			}
+		}
+		visited.pop()
 	}
 
 	// setAliasArguments sets the arguments for alias calls.

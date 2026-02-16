@@ -6,6 +6,8 @@
 
 const timestamp = '2024-01-01T00:00:01.000Z'
 const messageId = '9587b6d1-ae92-4d3c-a8d9-87c3e9ce7ae3'
+const customTimestamp = '2026-01-10T10:00:00.000Z'
+const customMessageId = '5ed0b9a8-e125-4e6f-b6f6-d8b0dc03c216'
 const anonymousId = '1b82c7e4-00b7-45d1-bbe2-6375fa9f8fa7'
 const path = '/path'
 const referrer = ''
@@ -114,7 +116,7 @@ const steps = [
 	{
 		name: `page(properties, options)`,
 		call: (meergo) => {
-			meergo.page({ title: 'alternative title', foo: 'boo' }, { count: 150 })
+			meergo.page({ title: 'alternative title', foo: 'boo' }, { context: { count: 150 } })
 		},
 		event: {
 			type: 'page',
@@ -157,7 +159,7 @@ const steps = [
 	{
 		name: `page(name, properties, options)`,
 		call: (meergo) => {
-			meergo.page('', { data: { a: 'b' } }, { locale: 'it-IT' })
+			meergo.page('', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'page',
@@ -174,7 +176,7 @@ const steps = [
 	{
 		name: `page(category, name, properties, options)`,
 		call: (meergo) => {
-			meergo.page('videos', 'cats', { data: { a: 'b' } }, { locale: 'it-IT' })
+			meergo.page('videos', 'cats', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'page',
@@ -268,7 +270,7 @@ const steps = [
 	{
 		name: `screen(properties, options)`,
 		call: (meergo) => {
-			meergo.screen({ step: 6 }, { count: 150 })
+			meergo.screen({ step: 6 }, { context: { count: 150 } })
 		},
 		event: {
 			type: 'screen',
@@ -311,7 +313,7 @@ const steps = [
 	{
 		name: `screen(name, properties, options)`,
 		call: (meergo) => {
-			meergo.screen('', { data: { a: 'b' } }, { locale: 'it-IT' })
+			meergo.screen('', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'screen',
@@ -328,7 +330,7 @@ const steps = [
 	{
 		name: `screen(category, name, properties, options)`,
 		call: (meergo) => {
-			meergo.screen('videos', 'cats', { data: { a: 'b' } }, { locale: 'it-IT' })
+			meergo.screen('videos', 'cats', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'screen',
@@ -388,7 +390,7 @@ const steps = [
 	{
 		name: `track(event, properties, options)`,
 		call: (meergo) => {
-			meergo.track('Product Viewed', { productId: 819382 }, { locale: 'it-IT' })
+			meergo.track('Product Viewed', { productId: 819382 }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'track',
@@ -398,6 +400,81 @@ const steps = [
 			anonymousId,
 			properties: { productId: 819382 },
 			context: { library, locale: 'it-IT', page, screen, sessionId, timezone, userAgent },
+			integrations,
+			userId,
+		},
+	},
+	{
+		name: `track(event, properties, options) // custom timestamp messageId integrations`,
+		call: (meergo) => {
+			meergo.track('Checkout Started', { cartId: 'abc123' }, {
+				timestamp: customTimestamp,
+				messageId: customMessageId,
+				integrations: { All: false, Segment: true },
+			})
+		},
+		event: {
+			type: 'track',
+			event: 'Checkout Started',
+			timestamp: customTimestamp,
+			messageId: customMessageId,
+			anonymousId,
+			properties: { cartId: 'abc123' },
+			context,
+			integrations: { All: false, Segment: true },
+			userId,
+		},
+	},
+	{
+		name: `track(event, properties, options) // deep context merge`,
+		call: (meergo) => {
+			meergo.track('Deep Merge', { n: 1 }, {
+				context: {
+					locale: 'it-IT',
+					page: { title: 'Custom Title', path: '/custom' },
+					app: { name: 'web', version: '1.0.0' },
+				},
+			})
+		},
+		event: {
+			type: 'track',
+			event: 'Deep Merge',
+			timestamp,
+			messageId,
+			anonymousId,
+			properties: { n: 1 },
+			context: {
+				library,
+				locale: 'it-IT',
+				page: { path: '/custom', referrer, search, title: 'Custom Title', url },
+				screen,
+				sessionId,
+				timezone,
+				userAgent,
+				app: { name: 'web', version: '1.0.0' },
+			},
+			integrations,
+			userId,
+		},
+	},
+	{
+		name: `track(event, properties, options) // invalid options are ignored`,
+		call: (meergo) => {
+			meergo.track('Invalid Options', { n: 2 }, {
+				timestamp: 1700000000000,
+				messageId: 123,
+				integrations: [],
+				context: 'invalid',
+			})
+		},
+		event: {
+			type: 'track',
+			event: 'Invalid Options',
+			timestamp,
+			messageId,
+			anonymousId,
+			properties: { n: 2 },
+			context,
 			integrations,
 			userId,
 		},
@@ -523,7 +600,7 @@ const steps = [
 	{
 		name: `identify(traits, options)`,
 		call: (meergo) => {
-			meergo.identify({ first_name: 'Susan', last_name: 'Davis' }, { locale: 'it-IT', key: 'value' })
+			meergo.identify({ first_name: 'Susan', last_name: 'Davis' }, { context: { locale: 'it-IT', key: 'value' } })
 		},
 		event: {
 			type: 'identify',
@@ -539,7 +616,7 @@ const steps = [
 	{
 		name: `identify(userId, traits, options)`,
 		call: (meergo) => {
-			meergo.identify(603614922, { age: 36 }, { locale: 'it-IT', key: 'value' })
+			meergo.identify(603614922, { age: 36 }, { context: { locale: 'it-IT', key: 'value' } })
 		},
 		event: {
 			type: 'identify',
@@ -668,7 +745,7 @@ const steps = [
 	{
 		name: `group(traits, options)`,
 		call: (meergo) => {
-			meergo.group({ name: 'Acme Inc.' }, { k: true })
+			meergo.group({ name: 'Acme Inc.' }, { context: { k: true } })
 		},
 		event: {
 			type: 'group',
@@ -684,7 +761,7 @@ const steps = [
 	{
 		name: `group(groupId, traits, options)`,
 		call: (meergo) => {
-			meergo.group('3617408', { name: 'Acme Inc.' }, { k: true })
+			meergo.group('3617408', { name: 'Acme Inc.' }, { context: { k: true } })
 		},
 		event: {
 			type: 'group',
