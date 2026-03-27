@@ -1,6 +1,6 @@
 {
 	"name": "@krenalis/javascript-sdk",
-	"version": "0.11.0",
+	"version": "0.12.0",
 	"description": "JavaScript SDK for sending events to the Krenalis Customer Data Platform (CDP)",
 	"main": "index.cjs",
 	"module": "index.js",
