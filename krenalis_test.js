@@ -6,16 +6,16 @@ import { assert, assertEquals, AssertionError, assertNotEquals, assertThrows } f
 import { FakeTime } from '@std/testing/time'
 import * as uuid from '@std/uuid/v4'
 import * as fake from './test_fake.js'
-import { steps } from './meergo_test_steps.js'
+import { steps } from './krenalis_test_steps.js'
 import { getTime } from './utils.js'
-import Meergo from './meergo.js'
+import Krenalis from './krenalis.js'
 
 const DEBUG = false
 
 const writeKey = 'rq6JJg5ENWK28NHfxSwJZmzeIvDC8GQO'
 const endpoint = 'https://example.com/v1/events/'
 
-Deno.test('Meergo', async (t) => {
+Deno.test('Krenalis', async (t) => {
 	// Prepare the execution environment.
 	{
 		globalThis.navigator.onLine = true
@@ -61,7 +61,7 @@ Deno.test('Meergo', async (t) => {
 	const thirtyMinutes = 30 * minute
 	const fiveMinutes = 5 * minute
 
-	// newMeergo returns a new instance of Meergo. However, the returned
+	// newKrenalis returns a new instance of Krenalis. However, the returned
 	// instance is not immediately ready; it becomes ready after a delay of
 	// 'latency' milliseconds.
 	//
@@ -69,7 +69,7 @@ Deno.test('Meergo', async (t) => {
 	// promise. If using fake time, you can advance the time by calling
 	// time.tick(latency), or alternatively, call time.next() to avoid advancing
 	// the fake time.
-	function newMeergo(options, strategy, latency) {
+	function newKrenalis(options, strategy, latency) {
 		const fetch = globalThis.fetch
 		globalThis.fetch = function () {
 			return new _Promise(function (resolve) {
@@ -90,7 +90,7 @@ Deno.test('Meergo', async (t) => {
 			options.debug = true
 		}
 		try {
-			return new Meergo(writeKey, endpoint, options)
+			return new Krenalis(writeKey, endpoint, options)
 		} finally {
 			globalThis.fetch = fetch
 		}
@@ -98,9 +98,9 @@ Deno.test('Meergo', async (t) => {
 
 	await t.step('ready, when Promise is not supported', async () => {
 		globalThis.Promise = null
-		const m = newMeergo()
+		const m = newKrenalis()
 		try {
-			// Before Meergo is ready.
+			// Before Krenalis is ready.
 			let cb
 			let promise = new _Promise((resolve) => {
 				cb = resolve
@@ -113,7 +113,7 @@ Deno.test('Meergo', async (t) => {
 			void m.ready(cb2)
 			await promise
 			await promise2
-			// After Meergo is ready.
+			// After Krenalis is ready.
 			promise = new _Promise((resolve) => {
 				cb = resolve
 			})
@@ -126,10 +126,10 @@ Deno.test('Meergo', async (t) => {
 	})
 
 	await t.step('ready, when Promise is supported', async () => {
-		const m = newMeergo()
-		// Before Meergo is ready.
+		const m = newKrenalis()
+		// Before Krenalis is ready.
 		await m.ready()
-		// After Meergo is ready.
+		// After Krenalis is ready.
 		await m.ready()
 		// With m callback.
 		let callback
@@ -142,14 +142,14 @@ Deno.test('Meergo', async (t) => {
 	})
 
 	await t.step('no key is created in the localStorage', () => {
-		const a = newMeergo({ sessions: { autoTrack: false } })
+		const a = newKrenalis({ sessions: { autoTrack: false } })
 		assertEquals(localStorage.length, 0)
 		a.close()
 	})
 
 	await t.step('reset function', async () => {
 		const fetch = new fake.Fetch(writeKey, endpoint, false, DEBUG)
-		const a = newMeergo({ sessions: { autoTrack: false } }, 'Preservation')
+		const a = newKrenalis({ sessions: { autoTrack: false } }, 'Preservation')
 		await a.ready()
 		a.startSession(137206)
 		a.setAnonymousId('53c5986a-7fa4-493c-9a61-75c483aaf3d7')
@@ -174,13 +174,13 @@ Deno.test('Meergo', async (t) => {
 			}
 		}
 		assert(hasQueueKey)
-		assert(localStorage.getItem(`meergo.rq6JJg5.leader.beat`) != null)
-		assert(localStorage.getItem(`meergo.rq6JJg5.leader.election`) != null)
+		assert(localStorage.getItem(`krenalis.rq6JJg5.leader.beat`) != null)
+		assert(localStorage.getItem(`krenalis.rq6JJg5.leader.election`) != null)
 		a.close()
 	})
 
 	await t.step('startSession argument validation', async () => {
-		const a = newMeergo({ sessions: { autoTrack: false } }, 'Preservation')
+		const a = newKrenalis({ sessions: { autoTrack: false } }, 'Preservation')
 		await a.ready()
 		// Check valid startSession arguments.
 		let ids = [null, undefined, 1, 300, Number.MAX_SAFE_INTEGER]
@@ -202,7 +202,7 @@ Deno.test('Meergo', async (t) => {
 	})
 
 	await t.step('getAnonymousId function', () => {
-		const a = newMeergo()
+		const a = newKrenalis()
 		assert(uuid.validate(a.getAnonymousId()))
 		a.setAnonymousId('f5d354ed')
 		assertEquals(a.getAnonymousId(), 'f5d354ed')
@@ -216,7 +216,7 @@ Deno.test('Meergo', async (t) => {
 	})
 
 	await t.step('setAnonymousId function', () => {
-		const a = newMeergo()
+		const a = newKrenalis()
 		assert(uuid.validate(a.setAnonymousId()))
 		const anonymousId = 'f5d354ed'
 		assertEquals(a.setAnonymousId(anonymousId), anonymousId)
@@ -236,7 +236,7 @@ Deno.test('Meergo', async (t) => {
 		fetch.install()
 		let a
 		try {
-			a = newMeergo()
+			a = newKrenalis()
 			let sessionId = getTime()
 			assertEquals(a.getSessionId(), sessionId)
 			time.tick(fiveMinutes)
@@ -278,7 +278,7 @@ Deno.test('Meergo', async (t) => {
 		fetch.install()
 		let a
 		try {
-			a = newMeergo({ useQueryString: { aid: /^\d+$/, uid: /^u\d+$/ } })
+			a = newKrenalis({ useQueryString: { aid: /^\d+$/, uid: /^u\d+$/ } })
 			await a.ready()
 			assertEquals(a.user().anonymousId(), '90261537')
 			let events = await fetch.events(2)
@@ -294,7 +294,7 @@ Deno.test('Meergo', async (t) => {
 			assertEquals(events[1].properties, { a: 'foo', b: '', c: 'boo' })
 			a.close()
 
-			a = newMeergo({ useQueryString: { aid: /^[a-z]+$/, uid: /^[A-Za-z\-]+$/ } })
+			a = newKrenalis({ useQueryString: { aid: /^[a-z]+$/, uid: /^[A-Za-z\-]+$/ } })
 			await a.ready()
 			assertNotEquals(a.user().anonymousId(), '90261537')
 			events = await fetch.events(1)
@@ -315,7 +315,7 @@ Deno.test('Meergo', async (t) => {
 
 	await t.step('sessions without auto tracking', async () => {
 		const time = new FakeTime()
-		const a = await newMeergo({ sessions: { autoTrack: false } }, null, 10)
+		const a = await newKrenalis({ sessions: { autoTrack: false } }, null, 10)
 		time.tick(10)
 		const fetch = new fake.Fetch(writeKey, endpoint, false, DEBUG)
 		fetch.install()
@@ -360,7 +360,7 @@ Deno.test('Meergo', async (t) => {
 	for (const strategy of ['Fusion', 'Conversion', 'Isolation', 'Preservation']) {
 		for (const autoTrack of [true, false]) {
 			await t.step(`strategy ${strategy} with${autoTrack ? '' : 'out'} sessions`, async () => {
-				const a = newMeergo({ sessions: { autoTrack } }, strategy)
+				const a = newKrenalis({ sessions: { autoTrack } }, strategy)
 				await a.ready()
 
 				const time = new FakeTime()
@@ -474,7 +474,7 @@ Deno.test('Meergo', async (t) => {
 		const time = new FakeTime()
 		const fetch = new fake.Fetch(writeKey, endpoint, false, DEBUG)
 		fetch.install()
-		const a = newMeergo({ sessions: { autoTrack: false } })
+		const a = newKrenalis({ sessions: { autoTrack: false } })
 		try {
 			a.user().id('274084295')
 			a.user().traits({ first_name: 'Susan' })
@@ -499,7 +499,7 @@ Deno.test('Meergo', async (t) => {
 		const time = new FakeTime()
 		const sendBeacon = new fake.SendBeacon(writeKey, endpoint, DEBUG)
 		sendBeacon.install()
-		const a = newMeergo()
+		const a = newKrenalis()
 		try {
 			time.tick(200)
 			void a.track('click')
@@ -528,7 +528,7 @@ Deno.test('Meergo', async (t) => {
 		const time = new FakeTime()
 		const fetch = new fake.Fetch(writeKey, endpoint, true, DEBUG)
 		fetch.install()
-		const a = newMeergo()
+		const a = newKrenalis()
 		try {
 			time.tick(200)
 			void a.track('click')
@@ -555,7 +555,7 @@ Deno.test('Meergo', async (t) => {
 			fetch.install()
 			randomUUID.install()
 			navigator.install()
-			const a = await newMeergo(step.options, null, 0)
+			const a = await newKrenalis(step.options, null, 0)
 			try {
 				time.next()
 				a.setAnonymousId('1b82c7e4-00b7-45d1-bbe2-6375fa9f8fa7')

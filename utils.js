@@ -20,11 +20,11 @@ function debug(on) {
 	if (on) {
 		if (isIE) {
 			return (...msg) => {
-				console.debug(`[${getTime()}] meergo:`, ...msg)
+				console.debug(`[${getTime()}] krenalis:`, ...msg)
 			}
 		}
 		return (...msg) => {
-			console.debug('%c meergo ', 'background:#606060;color:#eee', `[${getTime()}]`, ...msg)
+			console.debug('%c krenalis ', 'background:#606060;color:#eee', `[${getTime()}]`, ...msg)
 		}
 	}
 }
@@ -108,10 +108,10 @@ function isURL(url) {
 // log returns a logging function for log error messages on the console.
 function log(...msg) {
 	if (isIE) {
-		console.error('meergo:', ...msg)
+		console.error('krenalis:', ...msg)
 		return
 	}
-	console.error('%c meergo ', 'background:#dc362e;color:#dcdcdc', ...msg)
+	console.error('%c krenalis ', 'background:#dc362e;color:#dcdcdc', ...msg)
 }
 
 // onVisibilityChange calls cb when the browser shows or hides the current page.

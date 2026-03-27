@@ -30,7 +30,7 @@ deno task commit
 deno fmt
 ```
 
-## Build `dist/meergo.min.js`
+## Build `dist/krenalis.min.js`
 
 ```sh
 deno task build
@@ -44,15 +44,15 @@ deno task transpile
 deno task minify
 ```
 
-- `bundle`: bundles the SDK to `build/meergo.bundle.js`
-- `transpile`: transpiles to ES5 and creates `build/meergo.es5.js`
-- `minify`: minifies into `dist/meergo.min.js`
+- `bundle`: bundles the SDK to `build/krenalis.bundle.js`
+- `transpile`: transpiles to ES5 and creates `build/krenalis.es5.js`
+- `minify`: minifies into `dist/krenalis.min.js`
 
 ## Build ES6 and CJS modules
 
 ```sh
-deno task build:es6     # Builds dist/meergo.es6.min.js
-deno task build:cjs     # Builds dist/meergo.bundle.cjs
+deno task build:es6     # Builds dist/krenalis.es6.min.js
+deno task build:cjs     # Builds dist/krenalis.bundle.cjs
 ```
 
 ## Run tests

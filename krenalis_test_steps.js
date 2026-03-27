@@ -12,11 +12,11 @@ const anonymousId = '1b82c7e4-00b7-45d1-bbe2-6375fa9f8fa7'
 const path = '/path'
 const referrer = ''
 const search = '?query=123'
-const title = 'Hello from Meergo'
+const title = 'Hello from Krenalis'
 const url = 'https://example.com:8080/path?query=123'
 const properties = { path, referrer, search, title, url }
 const page = { path, referrer, search, title, url }
-const library = { name: 'meergo.js', version: '0.0.0' }
+const library = { name: 'krenalis.js', version: '0.0.0' }
 const screen = { width: 2560, height: 1440, density: 1.25 }
 const timezone = 'America/New_York'
 const userAgent =
@@ -32,23 +32,23 @@ const steps = [
 	// Page.
 	{
 		name: `page()`,
-		call: (meergo) => {
-			meergo.page()
+		call: (krenalis) => {
+			krenalis.page()
 		},
 		event: { type: 'page', timestamp, messageId, anonymousId, properties, context, integrations, userId },
 	},
 	{
 		name: `page(name)`,
-		call: (meergo) => {
-			meergo.page('Meergo Home')
+		call: (krenalis) => {
+			krenalis.page('Krenalis Home')
 		},
 		event: {
 			type: 'page',
 			timestamp,
 			messageId,
-			name: 'Meergo Home',
+			name: 'Krenalis Home',
 			anonymousId,
-			properties: { name: 'Meergo Home', path, referrer, search, title, url },
+			properties: { name: 'Krenalis Home', path, referrer, search, title, url },
 			context,
 			integrations,
 			userId,
@@ -56,8 +56,8 @@ const steps = [
 	},
 	{
 		name: `page(properties)`,
-		call: (meergo) => {
-			meergo.page({ title: 'alternative title', foo: 'boo' })
+		call: (krenalis) => {
+			krenalis.page({ title: 'alternative title', foo: 'boo' })
 		},
 		event: {
 			type: 'page',
@@ -80,8 +80,8 @@ const steps = [
 	},
 	{
 		name: `page(category, name)`,
-		call: (meergo) => {
-			meergo.page('Products', 'Shirt')
+		call: (krenalis) => {
+			krenalis.page('Products', 'Shirt')
 		},
 		event: {
 			type: 'page',
@@ -98,8 +98,8 @@ const steps = [
 	},
 	{
 		name: `page(name, properties)`,
-		call: (meergo) => {
-			meergo.page('Sign Up', { resellers: true })
+		call: (krenalis) => {
+			krenalis.page('Sign Up', { resellers: true })
 		},
 		event: {
 			type: 'page',
@@ -115,8 +115,8 @@ const steps = [
 	},
 	{
 		name: `page(properties, options)`,
-		call: (meergo) => {
-			meergo.page({ title: 'alternative title', foo: 'boo' }, { context: { count: 150 } })
+		call: (krenalis) => {
+			krenalis.page({ title: 'alternative title', foo: 'boo' }, { context: { count: 150 } })
 		},
 		event: {
 			type: 'page',
@@ -140,8 +140,8 @@ const steps = [
 	},
 	{
 		name: `page(category, name, properties)`,
-		call: (meergo) => {
-			meergo.page('users', 'Sign Up', { resellers: true })
+		call: (krenalis) => {
+			krenalis.page('users', 'Sign Up', { resellers: true })
 		},
 		event: {
 			type: 'page',
@@ -158,8 +158,8 @@ const steps = [
 	},
 	{
 		name: `page(name, properties, options)`,
-		call: (meergo) => {
-			meergo.page('', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
+		call: (krenalis) => {
+			krenalis.page('', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'page',
@@ -175,8 +175,8 @@ const steps = [
 	},
 	{
 		name: `page(category, name, properties, options)`,
-		call: (meergo) => {
-			meergo.page('videos', 'cats', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
+		call: (krenalis) => {
+			krenalis.page('videos', 'cats', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'page',
@@ -194,21 +194,21 @@ const steps = [
 	// Screen.
 	{
 		name: `screen()`,
-		call: (meergo) => {
-			meergo.screen()
+		call: (krenalis) => {
+			krenalis.screen()
 		},
 		event: { type: 'screen', timestamp, messageId, anonymousId, properties: {}, context, integrations, userId },
 	},
 	{
 		name: `screen(name)`,
-		call: (meergo) => {
-			meergo.screen('Meergo Main')
+		call: (krenalis) => {
+			krenalis.screen('Krenalis Main')
 		},
 		event: {
 			type: 'screen',
 			timestamp,
 			messageId,
-			name: 'Meergo Main',
+			name: 'Krenalis Main',
 			anonymousId,
 			properties: {},
 			context,
@@ -218,8 +218,8 @@ const steps = [
 	},
 	{
 		name: `screen(properties)`,
-		call: (meergo) => {
-			meergo.screen({ score: 517836 })
+		call: (krenalis) => {
+			krenalis.screen({ score: 517836 })
 		},
 		event: {
 			type: 'screen',
@@ -234,8 +234,8 @@ const steps = [
 	},
 	{
 		name: `screen(category, name)`,
-		call: (meergo) => {
-			meergo.screen('Products', 'Shirt')
+		call: (krenalis) => {
+			krenalis.screen('Products', 'Shirt')
 		},
 		event: {
 			type: 'screen',
@@ -252,8 +252,8 @@ const steps = [
 	},
 	{
 		name: `screen(name, properties)`,
-		call: (meergo) => {
-			meergo.screen('Sign Up', { resellers: true })
+		call: (krenalis) => {
+			krenalis.screen('Sign Up', { resellers: true })
 		},
 		event: {
 			type: 'screen',
@@ -269,8 +269,8 @@ const steps = [
 	},
 	{
 		name: `screen(properties, options)`,
-		call: (meergo) => {
-			meergo.screen({ step: 6 }, { context: { count: 150 } })
+		call: (krenalis) => {
+			krenalis.screen({ step: 6 }, { context: { count: 150 } })
 		},
 		event: {
 			type: 'screen',
@@ -294,8 +294,8 @@ const steps = [
 	},
 	{
 		name: `screen(category, name, properties)`,
-		call: (meergo) => {
-			meergo.screen('users', 'Sign Up', { resellers: true })
+		call: (krenalis) => {
+			krenalis.screen('users', 'Sign Up', { resellers: true })
 		},
 		event: {
 			type: 'screen',
@@ -312,8 +312,8 @@ const steps = [
 	},
 	{
 		name: `screen(name, properties, options)`,
-		call: (meergo) => {
-			meergo.screen('', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
+		call: (krenalis) => {
+			krenalis.screen('', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'screen',
@@ -329,8 +329,8 @@ const steps = [
 	},
 	{
 		name: `screen(category, name, properties, options)`,
-		call: (meergo) => {
-			meergo.screen('videos', 'cats', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
+		call: (krenalis) => {
+			krenalis.screen('videos', 'cats', { data: { a: 'b' } }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'screen',
@@ -348,15 +348,15 @@ const steps = [
 	// Track.
 	{
 		name: `track()`,
-		call: (meergo) => {
-			return meergo.track()
+		call: (krenalis) => {
+			return krenalis.track()
 		},
 		error: new Error('Event name is missing'),
 	},
 	{
 		name: `track(event)`,
-		call: (meergo) => {
-			meergo.track('Click')
+		call: (krenalis) => {
+			krenalis.track('Click')
 		},
 		event: {
 			type: 'track',
@@ -372,8 +372,8 @@ const steps = [
 	},
 	{
 		name: `track(event, properties)`,
-		call: (meergo) => {
-			meergo.track('Product Viewed', { productId: 819382 })
+		call: (krenalis) => {
+			krenalis.track('Product Viewed', { productId: 819382 })
 		},
 		event: {
 			type: 'track',
@@ -389,8 +389,8 @@ const steps = [
 	},
 	{
 		name: `track(event, properties, options)`,
-		call: (meergo) => {
-			meergo.track('Product Viewed', { productId: 819382 }, { context: { locale: 'it-IT' } })
+		call: (krenalis) => {
+			krenalis.track('Product Viewed', { productId: 819382 }, { context: { locale: 'it-IT' } })
 		},
 		event: {
 			type: 'track',
@@ -406,8 +406,8 @@ const steps = [
 	},
 	{
 		name: `track(event, properties, options) // custom timestamp messageId integrations`,
-		call: (meergo) => {
-			meergo.track('Checkout Started', { cartId: 'abc123' }, {
+		call: (krenalis) => {
+			krenalis.track('Checkout Started', { cartId: 'abc123' }, {
 				timestamp: customTimestamp,
 				messageId: customMessageId,
 				integrations: { All: false, Segment: true },
@@ -427,8 +427,8 @@ const steps = [
 	},
 	{
 		name: `track(event, properties, options) // deep context merge`,
-		call: (meergo) => {
-			meergo.track('Deep Merge', { n: 1 }, {
+		call: (krenalis) => {
+			krenalis.track('Deep Merge', { n: 1 }, {
 				context: {
 					locale: 'it-IT',
 					page: { title: 'Custom Title', path: '/custom' },
@@ -459,8 +459,8 @@ const steps = [
 	},
 	{
 		name: `track(event, properties, options) // invalid options are ignored`,
-		call: (meergo) => {
-			meergo.track('Invalid Options', { n: 2 }, {
+		call: (krenalis) => {
+			krenalis.track('Invalid Options', { n: 2 }, {
 				timestamp: 1700000000000,
 				messageId: 123,
 				integrations: [],
@@ -482,8 +482,8 @@ const steps = [
 	// Identify.
 	{
 		name: `identify()`,
-		call: (meergo) => {
-			meergo.identify()
+		call: (krenalis) => {
+			krenalis.identify()
 		},
 		event: {
 			type: 'identify',
@@ -498,8 +498,8 @@ const steps = [
 	},
 	{
 		name: `identify(userId)`,
-		call: (meergo) => {
-			meergo.identify('920577314')
+		call: (krenalis) => {
+			krenalis.identify('920577314')
 		},
 		event: {
 			type: 'identify',
@@ -514,9 +514,9 @@ const steps = [
 	},
 	{
 		name: `identify(userId) // with anonymous traits`,
-		call: (meergo) => {
-			meergo.user().traits({ first_name: 'Susan', last_name: 'Davis' })
-			meergo.identify('920577314')
+		call: (krenalis) => {
+			krenalis.user().traits({ first_name: 'Susan', last_name: 'Davis' })
+			krenalis.identify('920577314')
 		},
 		event: {
 			type: 'identify',
@@ -531,10 +531,10 @@ const steps = [
 	},
 	{
 		name: `identify(null)`,
-		call: (meergo) => {
-			meergo.user().id('920577314')
-			meergo.user().traits({ first_name: 'Susan' })
-			meergo.identify(null)
+		call: (krenalis) => {
+			krenalis.user().id('920577314')
+			krenalis.user().traits({ first_name: 'Susan' })
+			krenalis.identify(null)
 		},
 		event: {
 			type: 'identify',
@@ -549,8 +549,8 @@ const steps = [
 	},
 	{
 		name: `identify(traits)`,
-		call: (meergo) => {
-			meergo.identify({ first_name: 'Susan', last_name: 'Davis' })
+		call: (krenalis) => {
+			krenalis.identify({ first_name: 'Susan', last_name: 'Davis' })
 		},
 		event: {
 			type: 'identify',
@@ -565,8 +565,8 @@ const steps = [
 	},
 	{
 		name: `identify(userId, traits)`,
-		call: (meergo) => {
-			meergo.identify('920577314', { first_name: 'Susan', last_name: 'Davis' })
+		call: (krenalis) => {
+			krenalis.identify('920577314', { first_name: 'Susan', last_name: 'Davis' })
 		},
 		event: {
 			type: 'identify',
@@ -581,10 +581,10 @@ const steps = [
 	},
 	{
 		name: `identify(null, traits)`,
-		call: (meergo) => {
-			meergo.user().id('920577314')
-			meergo.user().traits({ first_name: 'Susan' })
-			meergo.identify(null, { last_name: 'Davis' })
+		call: (krenalis) => {
+			krenalis.user().id('920577314')
+			krenalis.user().traits({ first_name: 'Susan' })
+			krenalis.identify(null, { last_name: 'Davis' })
 		},
 		event: {
 			type: 'identify',
@@ -599,8 +599,8 @@ const steps = [
 	},
 	{
 		name: `identify(traits, options)`,
-		call: (meergo) => {
-			meergo.identify({ first_name: 'Susan', last_name: 'Davis' }, { context: { locale: 'it-IT', key: 'value' } })
+		call: (krenalis) => {
+			krenalis.identify({ first_name: 'Susan', last_name: 'Davis' }, { context: { locale: 'it-IT', key: 'value' } })
 		},
 		event: {
 			type: 'identify',
@@ -615,8 +615,8 @@ const steps = [
 	},
 	{
 		name: `identify(userId, traits, options)`,
-		call: (meergo) => {
-			meergo.identify(603614922, { age: 36 }, { context: { locale: 'it-IT', key: 'value' } })
+		call: (krenalis) => {
+			krenalis.identify(603614922, { age: 36 }, { context: { locale: 'it-IT', key: 'value' } })
 		},
 		event: {
 			type: 'identify',
@@ -631,16 +631,16 @@ const steps = [
 	},
 	{
 		name: `identify(userId, userId)`,
-		call: (meergo) => {
-			return meergo.identify(603614922, 603614922)
+		call: (krenalis) => {
+			return krenalis.identify(603614922, 603614922)
 		},
 		error: new Error('Invalid arguments'),
 	},
 	// Group.
 	{
 		name: `group(groupId)`,
-		call: (meergo) => {
-			meergo.group('3617408')
+		call: (krenalis) => {
+			krenalis.group('3617408')
 		},
 		event: {
 			type: 'group',
@@ -656,8 +656,8 @@ const steps = [
 	},
 	{
 		name: `group(undefined)`,
-		call: (meergo) => {
-			meergo.group(undefined)
+		call: (krenalis) => {
+			krenalis.group(undefined)
 		},
 		event: {
 			type: 'group',
@@ -673,10 +673,10 @@ const steps = [
 	},
 	{
 		name: `group(null)`,
-		call: (meergo) => {
-			meergo.group().id('acme')
-			meergo.group().traits({ name: 'Acme' })
-			meergo.group(null)
+		call: (krenalis) => {
+			krenalis.group().id('acme')
+			krenalis.group().traits({ name: 'Acme' })
+			krenalis.group(null)
 		},
 		event: {
 			type: 'group',
@@ -692,8 +692,8 @@ const steps = [
 	},
 	{
 		name: `group(traits)`,
-		call: (meergo) => {
-			meergo.group({ name: 'Acme Inc.' })
+		call: (krenalis) => {
+			krenalis.group({ name: 'Acme Inc.' })
 		},
 		event: {
 			type: 'group',
@@ -708,8 +708,8 @@ const steps = [
 	},
 	{
 		name: `group(groupId, traits)`,
-		call: (meergo) => {
-			meergo.group(3617408, { name: 'Acme Inc.' })
+		call: (krenalis) => {
+			krenalis.group(3617408, { name: 'Acme Inc.' })
 		},
 		event: {
 			type: 'group',
@@ -725,10 +725,10 @@ const steps = [
 	},
 	{
 		name: `group(null, traits)`,
-		call: (meergo) => {
-			meergo.group().id('acme')
-			meergo.group().traits({ name: 'Acme' })
-			meergo.group(null, { employees: 85 })
+		call: (krenalis) => {
+			krenalis.group().id('acme')
+			krenalis.group().traits({ name: 'Acme' })
+			krenalis.group(null, { employees: 85 })
 		},
 		event: {
 			type: 'group',
@@ -744,8 +744,8 @@ const steps = [
 	},
 	{
 		name: `group(traits, options)`,
-		call: (meergo) => {
-			meergo.group({ name: 'Acme Inc.' }, { context: { k: true } })
+		call: (krenalis) => {
+			krenalis.group({ name: 'Acme Inc.' }, { context: { k: true } })
 		},
 		event: {
 			type: 'group',
@@ -760,8 +760,8 @@ const steps = [
 	},
 	{
 		name: `group(groupId, traits, options)`,
-		call: (meergo) => {
-			meergo.group('3617408', { name: 'Acme Inc.' }, { context: { k: true } })
+		call: (krenalis) => {
+			krenalis.group('3617408', { name: 'Acme Inc.' }, { context: { k: true } })
 		},
 		event: {
 			type: 'group',
@@ -779,8 +779,8 @@ const steps = [
 	{
 		name: `no session`,
 		options: { sessions: { autoTrack: false } },
-		call: (meergo) => {
-			meergo.page()
+		call: (krenalis) => {
+			krenalis.page()
 		},
 		event: {
 			type: 'page',
@@ -796,9 +796,9 @@ const steps = [
 	{
 		name: `session started`,
 		options: { sessions: { autoTrack: false } },
-		call: (meergo) => {
-			meergo.startSession(1508273)
-			meergo.page()
+		call: (krenalis) => {
+			krenalis.startSession(1508273)
+			krenalis.page()
 		},
 		event: {
 			type: 'page',

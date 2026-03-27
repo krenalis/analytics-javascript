@@ -1,7 +1,7 @@
 {
-	"name": "@meergo/javascript-sdk",
+	"name": "@krenalis/javascript-sdk",
 	"version": "0.11.0",
-	"description": "JavaScript SDK for sending events to the Meergo Customer Data Platform (CDP)",
+	"description": "JavaScript SDK for sending events to the Krenalis Customer Data Platform (CDP)",
 	"main": "index.cjs",
 	"module": "index.js",
 	"exports": {
@@ -11,18 +11,18 @@
 	"files": [
 		"LICENSE",
 		"README.md",
-		"dist/meergo.bundle.cjs",
-		"dist/meergo.bundle.cjs.map",
-		"dist/meergo.es6.min.js",
-		"dist/meergo.es6.min.js.map",
-		"dist/meergo.min.js",
-		"dist/meergo.min.js.map",
+		"dist/krenalis.bundle.cjs",
+		"dist/krenalis.bundle.cjs.map",
+		"dist/krenalis.es6.min.js",
+		"dist/krenalis.es6.min.js.map",
+		"dist/krenalis.min.js",
+		"dist/krenalis.min.js.map",
 		"elections.js",
 		"group.js",
 		"index.cjs",
 		"index.d.ts",
 		"index.js",
-		"meergo.js",
+		"krenalis.js",
 		"options.js",
 		"queue.js",
 		"sender.js",
@@ -40,6 +40,6 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/meergo/analytics-javascript"
+		"url": "https://github.com/krenalis/analytics-javascript"
 	}
 }

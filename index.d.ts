@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Open2b
 // See the LICENSE file for full text.
 
-export class Meergo {
+export class Krenalis {
 	constructor(writeKey: string, endpoint: string, options?: Options)
 
 	alias(

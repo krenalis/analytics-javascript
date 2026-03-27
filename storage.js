@@ -5,7 +5,7 @@
 import { decodeBase64, encodeBase64 } from './utils.js'
 
 const storeNotSupported = new Error('store is not supported')
-const warnMsg = 'Meergo: cannot stringify traits'
+const warnMsg = 'Krenalis: cannot stringify traits'
 
 class Storage {
 	#key
@@ -14,7 +14,7 @@ class Storage {
 	#groupStore
 
 	constructor(writeKey, options) {
-		const prefix = `meergo.${writeKey.slice(0, 7)}.`
+		const prefix = `krenalis.${writeKey.slice(0, 7)}.`
 		this.#key = {
 			anonymousId: prefix + 'anonymousId',
 			userId: prefix + 'userId',

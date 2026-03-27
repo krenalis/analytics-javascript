@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Open2b
 // See the LICENSE file for full text.
 
-import { EndpointURLError, Meergo } from './meergo.js'
+import { EndpointURLError, Krenalis } from './krenalis.js'
 import { uuid } from './utils.js'
 
 function loadSDK() {
@@ -11,11 +11,11 @@ function loadSDK() {
 		return
 	}
 
-	const meergo = globalThis.meergo
+	const krenalis = globalThis.krenalis
 
 	let e
 	try {
-		e = new Meergo(meergo.key, meergo.url, meergo.options)
+		e = new Krenalis(krenalis.key, krenalis.url, krenalis.options)
 	} catch (error) {
 		if (error instanceof EndpointURLError) {
 			console.error(error.message)
@@ -45,18 +45,18 @@ function loadSDK() {
 		]
 		for (let i = 0; i < methods.length; i++) {
 			const method = methods[i]
-			meergo[method] = e[method].bind(e)
+			krenalis[method] = e[method].bind(e)
 		}
 
-		for (let i = 0; i < meergo.length; i++) {
-			const event = meergo[i]
-			meergo[event[0]](...event.splice(1))
+		for (let i = 0; i < krenalis.length; i++) {
+			const event = krenalis[i]
+			krenalis[event[0]](...event.splice(1))
 		}
 
 		// empty the array.
-		meergo.length = 0
+		krenalis.length = 0
 
-		globalThis.meergo = e
+		globalThis.krenalis = e
 	})
 }
 

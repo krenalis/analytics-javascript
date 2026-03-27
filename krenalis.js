@@ -24,7 +24,7 @@ const maxEventSize = 32 * 1024
 const maxSafeInteger = 9007199254740991
 
 // queueKeyReg is the regexp for storage queue keys.
-const queueKeyReg = /^meergo\.[a-zA-Z0-9]{7}\.[a-zA-Z0-9]{8}(?:-[a-zA-Z0-9]{4}){3}-[a-zA-Z0-9]{12}\.queue$/
+const queueKeyReg = /^krenalis\.[a-zA-Z0-9]{7}\.[a-zA-Z0-9]{8}(?:-[a-zA-Z0-9]{4}){3}-[a-zA-Z0-9]{12}\.queue$/
 
 class EndpointURLError extends Error {
 	constructor(endpoint) {
@@ -33,7 +33,7 @@ class EndpointURLError extends Error {
 	}
 }
 
-class Meergo {
+class Krenalis {
 	#id
 	#writeKey
 	#endpoint
@@ -51,7 +51,7 @@ class Meergo {
 	#onFollowerQueue = null // is null when it is not the leader
 	#debug
 
-	// constructor returns a new Meergo instance. writeKey is the write key,
+	// constructor returns a new Krenalis instance. writeKey is the write key,
 	// endpoint denotes the endpoint URL, and options is an object containing
 	// the options, if any. If endpoint is not a valid URL, it raises an
 	// EndpointURLError error.
@@ -79,7 +79,7 @@ class Meergo {
 			this.#options.sessions.timeout,
 			this.#options.debug,
 		)
-		this.#keysPrefix = `meergo.${writeKey.slice(0, 7)}`
+		this.#keysPrefix = `krenalis.${writeKey.slice(0, 7)}`
 		this.#queue = new Queue(localStorage, `${this.#keysPrefix}.*.queue`, maxEventSize)
 		this.#queue.debug(this.#options.debug)
 		this.#user = new User(this.#storage)
@@ -107,7 +107,7 @@ class Meergo {
 		return this.#send('alias', this.#setAliasArguments, arguments)
 	}
 
-	// close closes the Meergo instance.
+	// close closes the Krenalis instance.
 	// It tries to preserve the queue in the localStorage before returning.
 	close() {
 		this.#elections.close()
@@ -117,7 +117,7 @@ class Meergo {
 		this.#queue.close()
 		this.#ready.close()
 		this.#ready = null
-		this.#debug?.('Meergo closed')
+		this.#debug?.('Krenalis closed')
 	}
 
 	// debug toggles debug mode.
@@ -169,7 +169,7 @@ class Meergo {
 		return this.#send('page', this.#setPageScreenArguments, arguments)
 	}
 
-	// ready calls callback, if not null, after Meergo finishes initializing.
+	// ready calls callback, if not null, after Krenalis finishes initializing.
 	// If promises are supported, it also returns a promise.
 	ready(callback) {
 		if (callback != null) {
@@ -488,7 +488,7 @@ class Meergo {
 		const n = navigator
 		event.context = {
 			library: {
-				name: 'meergo.js',
+				name: 'krenalis.js',
 				version: version,
 			},
 			// According to caniuse.com, IE11 does not support the 'language' property but does support 'userLanguage'.
@@ -802,7 +802,7 @@ class Meergo {
 	}
 }
 
-// Ready handles the event that is fired when Meergo finishes initializing.
+// Ready handles the event that is fired when Krenalis finishes initializing.
 class Ready {
 	#emitted = false
 	#listeners = []
@@ -816,7 +816,7 @@ class Ready {
 	}
 	close() {
 		if (!this.#emitted) {
-			this.#error = new Error('Meergo instance has been closed')
+			this.#error = new Error('Krenalis instance has been closed')
 			this.#notify()
 		}
 	}
@@ -826,7 +826,7 @@ class Ready {
 	emit(error) {
 		this.#emitted = true
 		this.#error = error
-		this.#debug?.(error == null ? 'meergo is ready' : `meergo cannot be ready due to an error: ${error}`)
+		this.#debug?.(error == null ? 'krenalis is ready' : `krenalis cannot be ready due to an error: ${error}`)
 		this.#notify()
 	}
 	#notify() {
@@ -867,5 +867,5 @@ function typesOf(arr) {
 	return arr.map((v) => typeof v === 'object' && v != null ? 'object' : 'string').join(',')
 }
 
-export default Meergo
-export { EndpointURLError, Meergo }
+export default Krenalis
+export { EndpointURLError, Krenalis }
