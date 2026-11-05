@@ -39,6 +39,7 @@ function loadSDK() {
 			'reset',
 			'screen',
 			'setAnonymousId',
+			'setConsents',
 			'startSession',
 			'track',
 			'user',

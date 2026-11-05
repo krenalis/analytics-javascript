@@ -775,6 +775,71 @@ const steps = [
 			userId,
 		},
 	},
+	// Consents.
+	{
+		name: `setConsents(consents)`,
+		call: (krenalis) => {
+			const consents = { analytics: true, ads: false }
+			krenalis.setConsents(consents)
+			consents.ads = true // the consents are copied, so this change does not affect the event
+			krenalis.track('Click')
+		},
+		event: {
+			type: 'track',
+			event: 'Click',
+			timestamp,
+			messageId,
+			anonymousId,
+			properties: {},
+			context: { ...context, consents: { analytics: true, ads: false } },
+			integrations,
+			userId,
+		},
+	},
+	{
+		name: `setConsents(consents) // overridden by the event context`,
+		call: (krenalis) => {
+			krenalis.setConsents({ analytics: true, ads: false })
+			krenalis.track('Click', {}, { context: { consents: { ads: true } } })
+		},
+		event: {
+			type: 'track',
+			event: 'Click',
+			timestamp,
+			messageId,
+			anonymousId,
+			properties: {},
+			context: { ...context, consents: { analytics: true, ads: true } },
+			integrations,
+			userId,
+		},
+	},
+	{
+		name: `setConsents(null)`,
+		call: (krenalis) => {
+			krenalis.setConsents({ analytics: true })
+			krenalis.setConsents(null)
+			krenalis.track('Click')
+		},
+		event: {
+			type: 'track',
+			event: 'Click',
+			timestamp,
+			messageId,
+			anonymousId,
+			properties: {},
+			context,
+			integrations,
+			userId,
+		},
+	},
+	{
+		name: `setConsents(consents) // invalid consents`,
+		call: (krenalis) => {
+			krenalis.setConsents('analytics')
+		},
+		error: new Error('consents must be an object'),
+	},
 	// Sessions.
 	{
 		name: `no session`,

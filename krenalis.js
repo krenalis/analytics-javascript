@@ -11,7 +11,6 @@ import Sender from './sender.js'
 import Session from './session.js'
 import Storage from './storage.js'
 import User from './user.js'
-import setupKetch from './cmp/ketch.js'
 
 const version = '0.0.0'
 const none = () => {}
@@ -51,7 +50,7 @@ class Krenalis {
 	#isLeader = false
 	#onFollowerQueue = null // is null when it is not the leader
 	#debug
-	#consents
+	#consents = null
 
 	// constructor returns a new Krenalis instance. writeKey is the write key,
 	// endpoint denotes the endpoint URL, and options is an object containing
@@ -86,8 +85,6 @@ class Krenalis {
 		this.#queue.debug(this.#options.debug)
 		this.#user = new User(this.#storage)
 		this.#group = new Group(this.#storage)
-
-		this.#setupConsentManagement()
 
 		// Participate in leader elections.
 		const electionsState = new ElectionsState(this.#keysPrefix)
@@ -217,6 +214,29 @@ class Krenalis {
 	// returns the default Anonymous ID.
 	setAnonymousId(id) {
 		return this.#user.anonymousId(id)
+	}
+
+	// setConsents sets the user's consents, typically as communicated by a
+	// consent management platform (CMP). The consents are added, as 'consents',
+	// to the context of the events sent afterwards. consents is an object whose
+	// keys are the purposes and whose values report whether the user has
+	// consented to them. If consents is null or undefined, the consents are
+	// removed and no longer added to the events.
+	setConsents(consents) {
+		if (consents == null) {
+			this.#consents = null
+			return
+		}
+		if (!isPlainObject(consents)) {
+			throw new Error('consents must be an object')
+		}
+		// Copy the consents so that later changes to the passed object do not
+		// affect the events.
+		const c = {}
+		for (const k of Object.keys(consents)) {
+			c[k] = consents[k]
+		}
+		this.#consents = c
 	}
 
 	// startSession starts a new session.
@@ -542,7 +562,12 @@ class Krenalis {
 		}
 
 		if (this.#consents != null) {
-			event.context.consents = this.#consents;
+			// Copy the consents, as the user-provided context is merged into
+			// them.
+			event.context.consents = {}
+			for (const k of Object.keys(this.#consents)) {
+				event.context.consents[k] = this.#consents[k]
+			}
 		}
 
 		// Apply user-provided context last so it can override automatic
@@ -787,15 +812,6 @@ class Krenalis {
 				throw new Error('Invalid arguments')
 		}
 		return options
-	}
-
-	#setupConsentManagement() {
-		const onConsent = (consents) => {
-			this.#consents = consents
-		}
-		if (window.ketch != null) {
-			setupKetch(onConsent)
-		}
 	}
 
 	// mergeTraits merges traits into the current user's or group's traits,

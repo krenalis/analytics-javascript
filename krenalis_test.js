@@ -542,6 +542,27 @@ Deno.test('Krenalis', async (t) => {
 		}
 	})
 
+	await t.step('the event context does not change the consents', async () => {
+		const time = new FakeTime()
+		const fetch = new fake.Fetch(writeKey, endpoint, false, DEBUG)
+		fetch.install()
+		const a = newKrenalis({ sessions: { autoTrack: false } })
+		try {
+			a.setConsents({ analytics: true, ads: false })
+			void a.track('first', {}, { context: { consents: { ads: true } } })
+			void a.track('second')
+			time.tick(1000)
+			const events = await fetch.events(2)
+			assertEquals(events.length, 2)
+			assertEquals(events[0].context.consents, { analytics: true, ads: true })
+			assertEquals(events[1].context.consents, { analytics: true, ads: false })
+		} finally {
+			a.close()
+			fetch.restore()
+			time.restore()
+		}
+	})
+
 	// Execute the steps in the 'analytics_test_steps.js' module.
 	const fetch = new fake.Fetch(writeKey, endpoint, false, DEBUG)
 	const randomUUID = new fake.RandomUUID('9587b6d1-ae92-4d3c-a8d9-87c3e9ce7ae3')
