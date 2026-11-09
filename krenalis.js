@@ -217,7 +217,7 @@ class Krenalis {
 	}
 
 	// setConsents sets the user's consents, typically as communicated by a
-	// consent management platform (CMP). The consents are added, as 'consents',
+	// Consent Management Platform (CMP). The consents are added, as 'consents',
 	// to the context of the events sent afterwards. consents is an object whose
 	// keys are the purposes and whose values report whether the user has
 	// consented to them. If consents is null or undefined, the consents are
