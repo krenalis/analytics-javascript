@@ -50,6 +50,7 @@ class Krenalis {
 	#isLeader = false
 	#onFollowerQueue = null // is null when it is not the leader
 	#debug
+	#consents = null // is null when no consents are stored, so none are automatically added to events
 
 	// constructor returns a new Krenalis instance. writeKey is the write key,
 	// endpoint denotes the endpoint URL, and options is an object containing
@@ -213,6 +214,29 @@ class Krenalis {
 	// returns the default Anonymous ID.
 	setAnonymousId(id) {
 		return this.#user.anonymousId(id)
+	}
+
+	// setConsents sets the user's consents, typically as communicated by a
+	// Consent Management Platform (CMP). The consents are added, as 'consents',
+	// to the context of the events sent afterwards. consents is an object whose
+	// keys are the purposes and whose values report whether the user has
+	// consented to them. If consents is null or undefined, the consents are
+	// removed and no longer added to the events.
+	setConsents(consents) {
+		if (consents == null) {
+			this.#consents = null
+			return
+		}
+		if (!isPlainObject(consents)) {
+			throw new Error('consents must be an object')
+		}
+		// Copy the consents so that later changes to the passed object do not
+		// affect the events.
+		const c = {}
+		for (const k of Object.keys(consents)) {
+			c[k] = consents[k]
+		}
+		this.#consents = c
 	}
 
 	// startSession starts a new session.
@@ -537,8 +561,17 @@ class Krenalis {
 			}
 		}
 
+		if (this.#consents != null) {
+			// Copy the consents, as the user-provided context is merged into
+			// them.
+			event.context.consents = {}
+			for (const k of Object.keys(this.#consents)) {
+				event.context.consents[k] = this.#consents[k]
+			}
+		}
+
 		// Apply user-provided context last so it can override automatic
-		// enrichments (campaign, timezone, session, etc).
+		// enrichments (campaign, timezone, session, consents, etc).
 		if ('context' in options) {
 			this.#mergeContext(event.context, options.context)
 		}

@@ -91,6 +91,8 @@ export class Krenalis {
 
 	setAnonymousId(id?: string): string | undefined
 
+	setConsents(consents?: Record<string, boolean> | null): void
+
 	startSession(id?: number): void
 
 	track(
