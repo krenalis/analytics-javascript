@@ -50,7 +50,7 @@ class Krenalis {
 	#isLeader = false
 	#onFollowerQueue = null // is null when it is not the leader
 	#debug
-	#consents = null
+	#consents = null // is null when no consents are stored, so none are automatically added to events
 
 	// constructor returns a new Krenalis instance. writeKey is the write key,
 	// endpoint denotes the endpoint URL, and options is an object containing
