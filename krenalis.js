@@ -55,8 +55,9 @@ class Krenalis {
 	// constructor returns a new Krenalis instance. writeKey is the write key,
 	// endpoint denotes the endpoint URL, and options is an object containing
 	// the options, if any. If endpoint is not a valid URL, it raises an
-	// EndpointURLError error.
-	constructor(writeKey, endpoint, options) {
+	// EndpointURLError error. If provided, initialize is called after the
+	// options have loaded and before the query string is processed.
+	constructor(writeKey, endpoint, options, initialize) {
 		if (!isURL(endpoint)) {
 			throw new EndpointURLError(endpoint)
 		}
@@ -67,8 +68,13 @@ class Krenalis {
 		this.#ready = new Ready()
 		this.#options = new Options(writeKey, endpoint, options, (error) => {
 			if (this.#ready) {
-				if (error == null && this.#options.useQueryString != null) {
-					this.#processQuerystring()
+				if (error == null) {
+					if (initialize != null) {
+						initialize(this)
+					}
+					if (this.#options.useQueryString != null) {
+						this.#processQuerystring()
+					}
 				}
 				this.#ready.emit(error)
 			}
