@@ -15,7 +15,29 @@ function loadSDK() {
 
 	let e
 	try {
-		e = new Krenalis(krenalis.key, krenalis.url, krenalis.options)
+		e = new Krenalis(krenalis.key, krenalis.url, krenalis.options, (sdk) => {
+			// Apply the leading setup calls so events generated from the query
+			// string use the initial consent, identity, and session state. Keep
+			// later state changes in their original positions relative to
+			// enqueued events.
+			const methods = ['setConsents', 'setAnonymousId', 'startSession', 'endSession', 'reset']
+			while (krenalis.length > 0) {
+				const call = krenalis[0]
+				const methodName = call[0]
+				if (methods.indexOf(methodName) === -1) {
+					break
+				}
+				// Remove the call before executing it, and report any error
+				// without rethrowing it, so that an invalid call does not
+				// prevent the SDK from becoming ready.
+				krenalis.shift()
+				try {
+					sdk[methodName](...call.slice(1))
+				} catch (error) {
+					console.error(error)
+				}
+			}
+		})
 	} catch (error) {
 		if (error instanceof EndpointURLError) {
 			console.error(error.message)
