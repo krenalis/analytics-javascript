@@ -27,9 +27,15 @@ function loadSDK() {
 				if (methods.indexOf(methodName) === -1) {
 					break
 				}
-				const args = call.slice(1)
-				sdk[methodName](...args)
+				// Remove the call before executing it, and report any error
+				// without rethrowing it, so that an invalid call does not
+				// prevent the SDK from becoming ready.
 				krenalis.shift()
+				try {
+					sdk[methodName](...call.slice(1))
+				} catch (error) {
+					console.error(error)
+				}
 			}
 		})
 	} catch (error) {
