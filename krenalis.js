@@ -55,8 +55,8 @@ class Krenalis {
 	// constructor returns a new Krenalis instance. writeKey is the write key,
 	// endpoint denotes the endpoint URL, options is an object containing the
 	// options, if any, and consents, if provided, is used to set the initial
-	// consents. If endpoint is not a valid URL, it raises an
-	// EndpointURLError error.
+	// consents. If endpoint is not a valid URL, it raises an EndpointURLError
+	// error.
 	constructor(writeKey, endpoint, options, consents) {
 		if (!isURL(endpoint)) {
 			throw new EndpointURLError(endpoint)
