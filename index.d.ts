@@ -3,7 +3,7 @@
 // See the LICENSE file for full text.
 
 export class Krenalis {
-	constructor(writeKey: string, endpoint: string, options?: Options)
+	constructor(writeKey: string, endpoint: string, options?: Options, consents?: Record<string, boolean> | null)
 
 	alias(
 		userId: string,

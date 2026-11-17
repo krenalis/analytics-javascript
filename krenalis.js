@@ -53,28 +53,24 @@ class Krenalis {
 	#consents = null // is null when no consents are stored, so none are automatically added to events
 
 	// constructor returns a new Krenalis instance. writeKey is the write key,
-	// endpoint denotes the endpoint URL, and options is an object containing
-	// the options, if any. If endpoint is not a valid URL, it raises an
-	// EndpointURLError error. If provided, initialize is called after the
-	// options have loaded and before the query string is processed.
-	constructor(writeKey, endpoint, options, initialize) {
+	// endpoint denotes the endpoint URL, options is an object containing the
+	// options, if any, and consents, if provided, is used to set the initial
+	// consents. If endpoint is not a valid URL, it raises an
+	// EndpointURLError error.
+	constructor(writeKey, endpoint, options, consents) {
 		if (!isURL(endpoint)) {
 			throw new EndpointURLError(endpoint)
 		}
 
+		this.setConsents(consents)
 		this.#id = uuid()
 		this.#writeKey = writeKey
 		this.#endpoint = endpoint
 		this.#ready = new Ready()
 		this.#options = new Options(writeKey, endpoint, options, (error) => {
 			if (this.#ready) {
-				if (error == null) {
-					if (initialize != null) {
-						initialize(this)
-					}
-					if (this.#options.useQueryString != null) {
-						this.#processQuerystring()
-					}
+				if (error == null && this.#options.useQueryString != null) {
+					this.#processQuerystring()
 				}
 				this.#ready.emit(error)
 			}
