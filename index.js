@@ -15,7 +15,7 @@ function loadSDK() {
 
 	let e
 	try {
-		e = new Krenalis(krenalis.key, krenalis.url, krenalis.options)
+		e = new Krenalis(krenalis.key, krenalis.url, krenalis.options, krenalis.consents)
 	} catch (error) {
 		if (error instanceof EndpointURLError) {
 			console.error(error.message)

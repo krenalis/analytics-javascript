@@ -69,7 +69,7 @@ Deno.test('Krenalis', async (t) => {
 	// promise. If using fake time, you can advance the time by calling
 	// time.tick(latency), or alternatively, call time.next() to avoid advancing
 	// the fake time.
-	function newKrenalis(options, strategy, latency) {
+	function newKrenalis(options, strategy, latency, consents) {
 		const fetch = globalThis.fetch
 		globalThis.fetch = function () {
 			return new _Promise(function (resolve) {
@@ -90,7 +90,7 @@ Deno.test('Krenalis', async (t) => {
 			options.debug = true
 		}
 		try {
-			return new Krenalis(writeKey, endpoint, options)
+			return new Krenalis(writeKey, endpoint, options, consents)
 		} finally {
 			globalThis.fetch = fetch
 		}
@@ -139,6 +139,34 @@ Deno.test('Krenalis', async (t) => {
 		void m.ready(callback)
 		await promise
 		m.close()
+	})
+
+	await t.step('initial consents apply before ready', async () => {
+		for (const consents of [undefined, null, {}, { analytics: true, ads: false }]) {
+			const fetch = new fake.Fetch(writeKey, endpoint, false, DEBUG)
+			fetch.install()
+			const a = newKrenalis({ sessions: { autoTrack: false } }, null, null, consents)
+			try {
+				const expected = consents == null ? undefined : { ...consents }
+				if (consents != null) {
+					consents.ads = true
+				}
+				const sent = await a.track('before ready')
+				assertEquals(sent.event.context.consents, expected)
+				await a.ready()
+				const events = await fetch.events(1)
+				assertEquals(events[0].context.consents, expected)
+			} finally {
+				a.close()
+				fetch.restore()
+			}
+		}
+	})
+
+	await t.step('invalid initial consents', () => {
+		for (const consents of [true, 'analytics', []]) {
+			assertThrows(() => new Krenalis(writeKey, endpoint, undefined, consents), Error, 'consents must be an object')
+		}
 	})
 
 	await t.step('no key is created in the localStorage', () => {
@@ -278,7 +306,10 @@ Deno.test('Krenalis', async (t) => {
 		fetch.install()
 		let a
 		try {
-			a = newKrenalis({ useQueryString: { aid: /^\d+$/, uid: /^u\d+$/ } })
+			a = newKrenalis({ useQueryString: { aid: /^\d+$/, uid: /^u\d+$/ } }, null, null, {
+				analytics: true,
+				ads: false,
+			})
 			await a.ready()
 			assertEquals(a.user().anonymousId(), '90261537')
 			let events = await fetch.events(2)
@@ -287,11 +318,17 @@ Deno.test('Krenalis', async (t) => {
 			assertEquals(events[0].anonymousId, '90261537')
 			assertEquals(events[0].userId, 'u179362')
 			assertEquals(events[0].traits, { name: 'John', age: '32' })
+			assertEquals(events[0].context.consents, { analytics: true, ads: false })
 			assertEquals(events[1].type, 'track')
 			assertEquals(events[1].event, 'click')
 			assertEquals(events[1].anonymousId, '90261537')
 			assertEquals(events[1].userId, 'u179362')
 			assertEquals(events[1].properties, { a: 'foo', b: '', c: 'boo' })
+			assertEquals(events[1].context.consents, { analytics: true, ads: false })
+			a.setConsents({ analytics: false })
+			void a.track('after consent change')
+			events = await fetch.events(1)
+			assertEquals(events[0].context.consents, { analytics: false })
 			a.close()
 
 			a = newKrenalis({ useQueryString: { aid: /^[a-z]+$/, uid: /^[A-Za-z\-]+$/ } })

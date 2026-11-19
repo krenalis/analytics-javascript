@@ -53,14 +53,16 @@ class Krenalis {
 	#consents = null // is null when no consents are stored, so none are automatically added to events
 
 	// constructor returns a new Krenalis instance. writeKey is the write key,
-	// endpoint denotes the endpoint URL, and options is an object containing
-	// the options, if any. If endpoint is not a valid URL, it raises an
-	// EndpointURLError error.
-	constructor(writeKey, endpoint, options) {
+	// endpoint denotes the endpoint URL, options is an object containing the
+	// options, if any, and consents, if provided, is used to set the initial
+	// consents. If endpoint is not a valid URL, it raises an EndpointURLError
+	// error.
+	constructor(writeKey, endpoint, options, consents) {
 		if (!isURL(endpoint)) {
 			throw new EndpointURLError(endpoint)
 		}
 
+		this.#setConsents(consents)
 		this.#id = uuid()
 		this.#writeKey = writeKey
 		this.#endpoint = endpoint
@@ -223,20 +225,7 @@ class Krenalis {
 	// consented to them. If consents is null or undefined, the consents are
 	// removed and no longer added to the events.
 	setConsents(consents) {
-		if (consents == null) {
-			this.#consents = null
-			return
-		}
-		if (!isPlainObject(consents)) {
-			throw new Error('consents must be an object')
-		}
-		// Copy the consents so that later changes to the passed object do not
-		// affect the events.
-		const c = {}
-		for (const k of Object.keys(consents)) {
-			c[k] = consents[k]
-		}
-		this.#consents = c
+		this.#setConsents(consents)
 	}
 
 	// startSession starts a new session.
@@ -648,6 +637,23 @@ class Krenalis {
 				throw new Error('Invalid arguments')
 		}
 		return options
+	}
+
+	#setConsents(consents) {
+		if (consents == null) {
+			this.#consents = null
+			return
+		}
+		if (!isPlainObject(consents)) {
+			throw new Error('consents must be an object')
+		}
+		// Copy the consents so that later changes to the passed object do not
+		// affect the events.
+		const c = {}
+		for (const k of Object.keys(consents)) {
+			c[k] = consents[k]
+		}
+		this.#consents = c
 	}
 
 	// setIdentifyArguments sets the arguments for identify calls.
